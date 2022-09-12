@@ -1,6 +1,7 @@
 import styles from '../styles/Home.module.css'
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { startRegistration } from '@simplewebauthn/browser';
+import { useRouter } from 'next/router';
 
 export default function Home() {
     const { data: session, status } = useSession({
@@ -8,6 +9,8 @@ export default function Home() {
             return signIn();
         }
     });
+
+    const router = useRouter();
 
     async function registerWebauthn() {
         const optionsResponse = await fetch('/api/auth/webauthn/register');
@@ -51,6 +54,7 @@ export default function Home() {
                     <button onClick={registerWebauthn}>Register Webauthn</button>
 
                     <span>Signed in as {session?.user?.email}</span>
+                    <button onClick={() => router.push('http://localhost:3010/accounts')}>Continue to Banking</button>
                     <button onClick={() => signOut()}>Log out</button>
                 </main>
             </div>
